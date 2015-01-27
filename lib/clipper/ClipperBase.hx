@@ -187,3 +187,15 @@ class ClipperBase
     private function FindNextLocMin(E:clipper.TEdge):clipper.TEdge
     {
         var E2:clipper.TEdge;
+				while(true)
+				{
+					while (E.Bot != E.Prev.Bot || E.Curr == E.Top) E = E.Next;
+					if (E.Dx != horizontal && E.Prev.Dx != horizontal) break;
+					while (E.Prev.Dx == horizontal) E = E.Prev;
+					E2 = E;
+					while (E.Dx == horizontal) E = E.Next;
+					if (E.Top.Y == E.Prev.Bot.Y) continue; //ie just an intermediate horz.
+					if (E2.Prev.Bot.X < E.Bot.X) E = E2;
+					break;
+				}
+		}
