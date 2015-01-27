@@ -3,7 +3,7 @@ using StringTools;
 import system.*;
 import anonymoustypes.*;
 
-class DoublePoint
+@:struct class DoublePoint
 {
     public var X:Float;
     public var Y:Float;
@@ -12,13 +12,14 @@ class DoublePoint
         this.X = x;
         this.Y = y;
     }
-    public function new(dp:clipper.DoublePoint)
-    {
-        this.X = dp.X;
-        this.Y = dp.Y;
-    }
-    public function new(ip:clipper.IntPoint)
-    {
-        this.X = ip.X;
-        this.Y = ip.Y;
-    }
+
+		inline public static function fromPoint(pt:DoublePoint)
+		{
+			return new DoublePoint(pt.X, pt.Y);
+		}
+
+		inline public static function fromIntPoint(ip:IntPoint)
+		{
+			return new DoublePoint(ip.X, ip.Y);
+		}
+}
