@@ -1,11 +1,11 @@
-package clipperlib;
+package clipper;
 using StringTools;
 import system.*;
 import anonymoustypes.*;
 
-class MyIntersectNodeSort implements system.collections.generic.IComparer<clipperlib.IntersectNode>
+class MyIntersectNodeSort implements system.collections.generic.IComparer<clipper.IntersectNode>
 {
-    public function Compare(node1:clipperlib.IntersectNode, node2:clipperlib.IntersectNode):Int
+    public function Compare(node1:clipper.IntersectNode, node2:clipper.IntersectNode):Int
     {
         var i:Float = node2.Pt.Y - node1.Pt.Y;
         if (i > 0)

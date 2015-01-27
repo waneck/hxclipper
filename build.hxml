@@ -1,0 +1,3 @@
+-cp lib
+-cp samples/console
+--interp

@@ -1,4 +1,4 @@
-package clipperlib;
+package clipper;
 using StringTools;
 import system.*;
 import anonymoustypes.*;
@@ -15,9 +15,9 @@ class ClipperBase
     }
     public static inline var loRange:Float = 0x3FFFFFFF;
     public static inline var hiRange:Float = 0x3FFFFFFFFFFFFFFFL;
-    public var m_MinimaList:clipperlib.LocalMinima;
-    public var m_CurrentLM:clipperlib.LocalMinima;
-    public var m_edges:Array<Array<clipperlib.TEdge>>;
+    public var m_MinimaList:clipper.LocalMinima;
+    public var m_CurrentLM:clipper.LocalMinima;
+    public var m_edges:Array<Array<clipper.TEdge>>;
     public var m_UseFullRange:Bool;
     public var m_HasOpenPaths:Bool;
     public var PreserveCollinear:Bool;
@@ -27,13 +27,13 @@ class ClipperBase
         val1.Value = val2.Value;
         val2.Value = tmp;
     }
-    public static function IsHorizontal(e:clipperlib.TEdge):Bool
+    public static function IsHorizontal(e:clipper.TEdge):Bool
     {
         return e.Delta.Y == 0;
     }
-    public function PointIsVertex(pt:clipperlib.IntPoint, pp:clipperlib.OutPt):Bool
+    public function PointIsVertex(pt:clipper.IntPoint, pp:clipper.OutPt):Bool
     {
-        var pp2:clipperlib.OutPt = pp;
+        var pp2:clipper.OutPt = pp;
         do
         {
             if (pp2.Pt == pt)
@@ -45,20 +45,20 @@ class ClipperBase
         while (pp2 != pp);
         return false;
     }
-    public function PointOnLineSegment(pt:clipperlib.IntPoint, linePt1:clipperlib.IntPoint, linePt2:clipperlib.IntPoint, UseFullRange:Bool):Bool
+    public function PointOnLineSegment(pt:clipper.IntPoint, linePt1:clipper.IntPoint, linePt2:clipper.IntPoint, UseFullRange:Bool):Bool
     {
         if (UseFullRange)
         {
-            return ((pt.X == linePt1.X) && (pt.Y == linePt1.Y)) || ((pt.X == linePt2.X) && (pt.Y == linePt2.Y)) || (((pt.X > linePt1.X) == (pt.X < linePt2.X)) && ((pt.Y > linePt1.Y) == (pt.Y < linePt2.Y)) && ((clipperlib.Int128.Int128Mul((pt.X - linePt1.X), (linePt2.Y - linePt1.Y)) == clipperlib.Int128.Int128Mul((linePt2.X - linePt1.X), (pt.Y - linePt1.Y)))));
+            return ((pt.X == linePt1.X) && (pt.Y == linePt1.Y)) || ((pt.X == linePt2.X) && (pt.Y == linePt2.Y)) || (((pt.X > linePt1.X) == (pt.X < linePt2.X)) && ((pt.Y > linePt1.Y) == (pt.Y < linePt2.Y)) && ((clipper.Int128.Int128Mul((pt.X - linePt1.X), (linePt2.Y - linePt1.Y)) == clipper.Int128.Int128Mul((linePt2.X - linePt1.X), (pt.Y - linePt1.Y)))));
         }
         else
         {
             return ((pt.X == linePt1.X) && (pt.Y == linePt1.Y)) || ((pt.X == linePt2.X) && (pt.Y == linePt2.Y)) || (((pt.X > linePt1.X) == (pt.X < linePt2.X)) && ((pt.Y > linePt1.Y) == (pt.Y < linePt2.Y)) && ((pt.X - linePt1.X) * (linePt2.Y - linePt1.Y) == (linePt2.X - linePt1.X) * (pt.Y - linePt1.Y)));
         }
     }
-    public function PointOnPolygon(pt:clipperlib.IntPoint, pp:clipperlib.OutPt, UseFullRange:Bool):Bool
+    public function PointOnPolygon(pt:clipper.IntPoint, pp:clipper.OutPt, UseFullRange:Bool):Bool
     {
-        var pp2:clipperlib.OutPt = pp;
+        var pp2:clipper.OutPt = pp;
         while (true)
         {
             if (PointOnLineSegment(pt, pp2.Pt, pp2.Next.Pt, UseFullRange))
@@ -73,33 +73,33 @@ class ClipperBase
         }
         return false;
     }
-    public static function SlopesEqual(e1:clipperlib.TEdge, e2:clipperlib.TEdge, UseFullRange:Bool):Bool
+    public static function SlopesEqual(e1:clipper.TEdge, e2:clipper.TEdge, UseFullRange:Bool):Bool
     {
         if (UseFullRange)
         {
-            return clipperlib.Int128.Int128Mul(e1.Delta.Y, e2.Delta.X) == clipperlib.Int128.Int128Mul(e1.Delta.X, e2.Delta.Y);
+            return clipper.Int128.Int128Mul(e1.Delta.Y, e2.Delta.X) == clipper.Int128.Int128Mul(e1.Delta.X, e2.Delta.Y);
         }
         else
         {
             return (e1.Delta.Y) * (e2.Delta.X) == (e1.Delta.X) * (e2.Delta.Y);
         }
     }
-    public static function SlopesEqual_IntPoint_IntPoint_IntPoint_Boolean(pt1:clipperlib.IntPoint, pt2:clipperlib.IntPoint, pt3:clipperlib.IntPoint, UseFullRange:Bool):Bool
+    public static function SlopesEqual_IntPoint_IntPoint_IntPoint_Boolean(pt1:clipper.IntPoint, pt2:clipper.IntPoint, pt3:clipper.IntPoint, UseFullRange:Bool):Bool
     {
         if (UseFullRange)
         {
-            return clipperlib.Int128.Int128Mul(pt1.Y - pt2.Y, pt2.X - pt3.X) == clipperlib.Int128.Int128Mul(pt1.X - pt2.X, pt2.Y - pt3.Y);
+            return clipper.Int128.Int128Mul(pt1.Y - pt2.Y, pt2.X - pt3.X) == clipper.Int128.Int128Mul(pt1.X - pt2.X, pt2.Y - pt3.Y);
         }
         else
         {
             return (pt1.Y - pt2.Y) * (pt2.X - pt3.X) - (pt1.X - pt2.X) * (pt2.Y - pt3.Y) == 0;
         }
     }
-    public static function SlopesEqual_IntPoint_IntPoint_IntPoint_IntPoint_Boolean(pt1:clipperlib.IntPoint, pt2:clipperlib.IntPoint, pt3:clipperlib.IntPoint, pt4:clipperlib.IntPoint, UseFullRange:Bool):Bool
+    public static function SlopesEqual_IntPoint_IntPoint_IntPoint_IntPoint_Boolean(pt1:clipper.IntPoint, pt2:clipper.IntPoint, pt3:clipper.IntPoint, pt4:clipper.IntPoint, UseFullRange:Bool):Bool
     {
         if (UseFullRange)
         {
-            return clipperlib.Int128.Int128Mul(pt1.Y - pt2.Y, pt3.X - pt4.X) == clipperlib.Int128.Int128Mul(pt1.X - pt2.X, pt3.Y - pt4.Y);
+            return clipper.Int128.Int128Mul(pt1.Y - pt2.Y, pt3.X - pt4.X) == clipper.Int128.Int128Mul(pt1.X - pt2.X, pt3.Y - pt4.Y);
         }
         else
         {
@@ -108,7 +108,7 @@ class ClipperBase
     }
     public function new()
     {
-        m_edges = new Array<Array<clipperlib.TEdge>>();
+        m_edges = new Array<Array<clipper.TEdge>>();
         m_MinimaList = null;
         m_CurrentLM = null;
         m_UseFullRange = false;
@@ -141,19 +141,19 @@ class ClipperBase
     {
         while (m_MinimaList != null)
         {
-            var tmpLm:clipperlib.LocalMinima = m_MinimaList.Next;
+            var tmpLm:clipper.LocalMinima = m_MinimaList.Next;
             m_MinimaList = null;
             m_MinimaList = tmpLm;
         }
         m_CurrentLM = null;
     }
-    function RangeTest(Pt:clipperlib.IntPoint, useFullRange:CsRef<Bool>):Void
+    function RangeTest(Pt:clipper.IntPoint, useFullRange:CsRef<Bool>):Void
     {
         if (useFullRange.Value)
         {
             if (Pt.X > hiRange || Pt.Y > hiRange || -Pt.X > hiRange || -Pt.Y > hiRange)
             {
-                throw new clipperlib.ClipperException("Coordinate outside allowed range");
+                throw new clipper.ClipperException("Coordinate outside allowed range");
             }
         }
         else if (Pt.X > loRange || Pt.Y > loRange || -Pt.X > loRange || -Pt.Y > loRange)
@@ -162,14 +162,14 @@ class ClipperBase
             RangeTest(Pt, useFullRange);
         }
     }
-    private function InitEdge(e:clipperlib.TEdge, eNext:clipperlib.TEdge, ePrev:clipperlib.TEdge, pt:clipperlib.IntPoint):Void
+    private function InitEdge(e:clipper.TEdge, eNext:clipper.TEdge, ePrev:clipper.TEdge, pt:clipper.IntPoint):Void
     {
         e.Next = eNext;
         e.Prev = ePrev;
         e.Curr = pt;
         e.OutIdx = Unassigned;
     }
-    private function InitEdge2(e:clipperlib.TEdge, polyType:Int):Void
+    private function InitEdge2(e:clipper.TEdge, polyType:Int):Void
     {
         if (e.Curr.Y >= e.Next.Curr.Y)
         {
@@ -184,6 +184,6 @@ class ClipperBase
         SetDx(e);
         e.PolyTyp = polyType;
     }
-    private function FindNextLocMin(E:clipperlib.TEdge):clipperlib.TEdge
+    private function FindNextLocMin(E:clipper.TEdge):clipper.TEdge
     {
-        var E2:clipperlib.TEdge;
+        var E2:clipper.TEdge;

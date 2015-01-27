@@ -1,19 +1,19 @@
-package clipperlib;
+package clipper;
 using StringTools;
 import system.*;
 import anonymoustypes.*;
 
-class PolyType
+class Direction
 {
-    public static inline var ptSubject:Int = 1;
-    public static inline var ptClip:Int = 2;
+    public static inline var dRightToLeft:Int = 1;
+    public static inline var dLeftToRight:Int = 2;
 
     public static function ToString(e:Int):String
     {
         switch (e)
         {
-            case 1: return "ptSubject";
-            case 2: return "ptClip";
+            case 1: return "dRightToLeft";
+            case 2: return "dLeftToRight";
             default: throw new InvalidOperationException(Std.string(e));
         }
     }
@@ -22,8 +22,8 @@ class PolyType
     {
         switch (s)
         {
-            case "ptSubject": return 1;
-            case "ptClip": return 2;
+            case "dRightToLeft": return 1;
+            case "dLeftToRight": return 2;
             default: throw new InvalidOperationException(s);
         }
     }

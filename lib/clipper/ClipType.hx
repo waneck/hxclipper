@@ -1,4 +1,4 @@
-package clipperlib;
+package clipper;
 using StringTools;
 import system.*;
 import anonymoustypes.*;
